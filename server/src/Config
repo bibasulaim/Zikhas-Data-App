@@ -1,0 +1,11 @@
+config/
+└── db.js
+
+controllers/
+└── authController.js
+
+middleware/
+└── auth.js
+
+routes/
+└── authRoutes.js
