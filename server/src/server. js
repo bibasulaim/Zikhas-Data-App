@@ -1,0 +1,28 @@
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const dotenv = require('dotenv');
+
+// Load environment variables
+dotenv.config();
+
+const app = express();
+
+// Global Middleware
+app.use(helmet());
+app.use(cors());
+app.use(express.json()); // Parses incoming JSON requests
+
+// Test Route
+app.get('/', (req, res) => {
+    res.json({ message: "Welcome to the Zikhas Data App Backend API!" });
+});
+
+// Start Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running securely on port ${PORT}`);
+});
+
+
+create server.js
