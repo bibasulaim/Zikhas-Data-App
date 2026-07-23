@@ -4,4 +4,4 @@ app.use(express.json());
 
 app.get('/', (req, res) => res.send("Server works!"));
 
-app.listen(5000, () => console.log("Running on 5000"));
+app.listen(5000, () => console.log("Running on 5000")
