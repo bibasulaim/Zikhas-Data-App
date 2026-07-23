@@ -1,1 +1,43 @@
-routes/authRoutes.js
+const express = require('express');
+const router = express.Router();
+const User = require('../models/User');
+
+// USER REGISTRATION ROUTE
+router.post('/register', async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+
+        // Check if user already exists
+        let userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: "User with this email already exists" });
+        }
+
+        // Create new user (Note: Later we will add bcrypt hashing here for security)
+        const newUser = new User({ username, email, password });
+        await newUser.save();
+
+        res.status(201).json({ message: "User registered successfully!", user: { username, email } });
+    } catch (error) {
+        res.status(500).json({ message: "Server registration error", error: error.message });
+    }
+});
+
+// USER LOGIN ROUTE
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user || user.password !== password) {
+            return res.status(400).json({ message: "Invalid email or password credentials" });
+        }
+
+        res.status(200).json({ message: `Welcome back, ${user.username}!`, walletBalance: user.walletBalance });
+    } catch (error) {
+        res.status(500).json({ message: "Server login error", error: error.message });
+    }
+});
+
+module.exports = router;
