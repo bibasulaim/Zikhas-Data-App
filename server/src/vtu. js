@@ -1,0 +1,38 @@
+const express = require('express');
+const router = express.Router();
+const User = require('../models/User');
+
+// BUY DATA OR AIRTIME VENDING ROUTE
+router.post('/buy', async (req, res) => {
+    try {
+        const { email, network, planType, phoneNumber, amount } = req.body;
+
+        // 1. Find user to check their wallet balance
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User account not found" });
+        }
+
+        // 2. Check if user has enough funds in their wallet
+        if (user.walletBalance < amount) {
+            return res.status(400).json({ message: "Insufficient wallet balance. Please top up." });
+        }
+
+        // 3. Deduct money from user balance
+        user.walletBalance -= amount;
+        await user.save();
+
+        // 4. Trigger VTU API simulation (Later we connect Paystack/Simhost API here)
+        console.log(`Sending ${planType} to ${phoneNumber} via ${network}`);
+
+        res.status(200).json({
+            message: `Transaction successful! ${planType} sent to ${phoneNumber}`,
+            remainingBalance: user.walletBalance
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: "Transaction failed", error: error.message });
+    }
+});
+
+module.exports = router;
