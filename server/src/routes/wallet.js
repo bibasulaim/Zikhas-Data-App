@@ -55,8 +55,18 @@ router.post('/deposit', async (req, res) => {
 
         user.walletBalance += Number(amount);
 
-        await user.save();
+        user.walletBalance += Number(amount);
 
+await user.save();
+
+const Transaction = require("../models/Transaction");
+
+await Transaction.create({
+  userId: user._id,
+  type: "Wallet Funding",
+  amount: Number(amount),
+  status: "successful"
+});
         res.json({
             success: true,
             message: 'Wallet funded successfully',
