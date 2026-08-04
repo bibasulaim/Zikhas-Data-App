@@ -1,0 +1,35 @@
+.app {
+  text-align: center;
+  padding: 80px 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #0b6bcb;
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.buttons {
+  margin-top: 30px;
+}
+
+button {
+  padding: 12px 24px;
+  margin: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #0b6bcb;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}

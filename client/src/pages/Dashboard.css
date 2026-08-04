@@ -1,0 +1,45 @@
+.dashboard {
+  padding: 25px;
+  font-family: Arial, sans-serif;
+  background: #f8fbff;
+  min-height: 100vh;
+}
+
+h1 {
+  color: #1565C0;
+}
+
+.wallet-card {
+  background: linear-gradient(135deg, #1565C0, #1E88E5);
+  color: white;
+  padding: 20px;
+  border-radius: 18px;
+  margin: 20px 0;
+}
+
+.wallet-card button {
+  margin-top: 15px;
+  background: #FFD54F;
+  color: #000;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.service {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  font-size: 18px;
+}
