@@ -1,8 +1,65 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
+
 function Register() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await api.post("/auth/register", {
+        username,
+        email,
+        password,
+      });
+
+      alert(res.data.message || "Registration successful!");
+      navigate("/login");
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
+    }
+  };
+
   return (
-    <div>
+    <div style={{ maxWidth: "400px", margin: "40px auto" }}>
       <h1>Register</h1>
       <p>Create your Zikhas Data account.</p>
+
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <br /><br />
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <br /><br />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <br /><br />
+
+        <button type="submit">Register</button>
+      </form>
     </div>
   );
 }
