@@ -7,6 +7,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+
       <h1>💙 Zikhas Data</h1>
 
       <p>
@@ -15,12 +16,15 @@ function Dashboard() {
 
       <div className="wallet-card">
         <h3>Wallet Balance</h3>
-        <h2>₦{user?.walletBalance ?? 0}</h2>
+        <h2>
+          ₦{user?.walletBalance ?? 0}
+        </h2>
 
         <button onClick={() => navigate("/wallet")}>
           Fund Wallet
         </button>
       </div>
+
 
       <h3>Quick Services</h3>
 
@@ -35,6 +39,7 @@ function Dashboard() {
           Data
         </div>
 
+
         <div
           className="service"
           onClick={() => navigate("/airtime")}
@@ -44,19 +49,28 @@ function Dashboard() {
           Airtime
         </div>
 
-        <div className="service">
+
+        <div
+          className="service"
+          onClick={() => navigate("/cable-tv")}
+        >
           📺
           <br />
           Cable TV
         </div>
 
-        <div className="service">
+
+        <div
+          className="service"
+          onClick={() => navigate("/electricity")}
+        >
           ⚡
           <br />
           Electricity
         </div>
 
       </div>
+
 
       <h3>Recent Transactions</h3>
 
