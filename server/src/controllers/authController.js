@@ -2,6 +2,9 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// =========================
+// Register
+// =========================
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -10,6 +13,7 @@ exports.register = async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({
+        success: false,
         message: "User already exists",
       });
     }
@@ -24,24 +28,30 @@ exports.register = async (req, res) => {
     });
 
     res.status(201).json({
-  success: true,
-  message: "Registration successful",
-  user: {
-    id: user._id,
-    username: user.username,
-    email: user.email,
-    walletBalance: user.walletBalance,
-    role: user.role,
-  },
-});
+      success: true,
+      message: "Registration successful",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        walletBalance: user.walletBalance,
+        role: user.role,
+      },
+    });
+
   } catch (error) {
-    console.error(error);
+    console.error("Registration Error:", error);
+
     res.status(500).json({
+      success: false,
       message: "Server error during registration",
     });
   }
 };
 
+// =========================
+// Login
+// =========================
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,16 +60,16 @@ exports.login = async (req, res) => {
 
     if (!user) {
       return res.status(400).json({
+        success: false,
         message: "Invalid email or password",
       });
+    }
 
-const isMatch = await bcrypt.compare(password, user.password);
-
-console.log("Login email:", email);
-console.log("Password match:", isMatch);
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({
+        success: false,
         message: "Invalid email or password",
       });
     }
@@ -71,19 +81,23 @@ console.log("Password match:", isMatch);
     );
 
     res.json({
-  success: true,
-  token,
-  user: {
-    id: user._id,
-    username: user.username,
-    email: user.email,
-    walletBalance: user.walletBalance,
-    role: user.role,
-  },
-});
+      success: true,
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        walletBalance: user.walletBalance,
+        role: user.role,
+      },
+    });
+
   } catch (error) {
-    console.error(error);
+    console.error("Login Error:", error);
+
     res.status(500).json({
+      success: false,
       message: "Server error during login",
     });
   }
