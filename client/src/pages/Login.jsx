@@ -14,19 +14,18 @@ function Login() {
         password,
       });
 
-      // Save JWT token
       localStorage.setItem("token", response.data.token);
-localStorage.setItem("user", JSON.stringify(response.data.user));
-      alert("Login successful!");
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      // Go to Dashboard
+      alert("Login successful!");
       navigate("/dashboard");
+
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        "Login failed! Check your email and password."
-      );
-      console.log(error.response?.data || error.message);
+      console.log("FULL ERROR:", error);
+      console.log("RESPONSE:", error.response);
+      console.log("DATA:", error.response?.data);
+
+      alert(JSON.stringify(error.response?.data || error.message));
     }
   }
 
@@ -42,7 +41,8 @@ localStorage.setItem("user", JSON.stringify(response.data.user));
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <br /><br />
+      <br />
+      <br />
 
       <input
         type="password"
@@ -51,7 +51,8 @@ localStorage.setItem("user", JSON.stringify(response.data.user));
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <br /><br />
+      <br />
+      <br />
 
       <button onClick={handleLogin}>
         Login
