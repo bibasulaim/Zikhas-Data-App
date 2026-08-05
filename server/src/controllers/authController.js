@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // =========================
-// Register
+// REGISTER
 // =========================
 exports.register = async (req, res) => {
   try {
@@ -50,22 +50,31 @@ exports.register = async (req, res) => {
 };
 
 // =========================
-// Login
+// LOGIN
 // =========================
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log("========== LOGIN ==========");
+    console.log("Email:", email);
+
     const user = await User.findOne({ email });
 
     if (!user) {
+      console.log("User not found");
+
       return res.status(400).json({
         success: false,
         message: "Invalid email or password",
       });
     }
 
+    console.log("User found:", user.email);
+
     const isMatch = await bcrypt.compare(password, user.password);
+
+    console.log("Password match:", isMatch);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -79,6 +88,8 @@ exports.login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+
+    console.log("Login successful");
 
     res.json({
       success: true,
@@ -94,7 +105,7 @@ exports.login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Login Error:", error);
+    console.error("LOGIN ERROR:", error);
 
     res.status(500).json({
       success: false,
