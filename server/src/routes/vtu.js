@@ -1,41 +1,70 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-// @route   GET /api/vtu/test
-// @desc    Test VTU route works
-// @access  Public
-router.get('/test', (req, res) => {
-    res.json({ message: "VTU route is working properly!" });
+const User = require("../models/User");
+const Transaction = require("../models/Transaction");
+
+// Test Route
+router.get("/test", (req, res) => {
+  res.json({ message: "VTU route is working properly!" });
 });
 
-// @route   POST /api/vtu/recharge
-// @desc    Process a Virtual Top-Up transaction (Airtime/Data)
-// @access  Public
-router.post('/recharge', async (req, res) => {
-    try {
-        const { phoneNumber, network, amount, type } = req.body;
+// ===============================
+// BUY AIRTIME
+// ===============================
+router.post("/airtime", async (req, res) => {
+  try {
+    const { userId, phone, network, amount } = req.body;
 
-        // 1. Basic validation check
-        if (!phoneNumber || !network || !amount || !type) {
-            return res.status(400).json({ 
-                message: "Please provide phone number, network, amount, and type." 
-            });
-        }
-
-        // TODO: Integrate your preferred VTU API provider here (e.g., VTpass, Clubkonnect, Monnify, etc.)
-
-        // 2. Mock successful response for testing
-        res.status(200).json({
-            success: true,
-            message: `Initiated ${type} top-up of ₦${amount} to ${phoneNumber} (${network})`,
-            transactionId: `TXN-${Date.now()}`
-        });
-
-    } catch (error) {
-        console.error("VTU Error:", error);
-        res.status(500).json({ message: "Server error processing VTU request" });
+    if (!userId || !phone || !network || !amount) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
     }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.walletBalance < Number(amount)) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient wallet balance",
+      });
+    }
+
+    // Deduct wallet
+    user.walletBalance -= Number(amount);
+    await user.save();
+
+    // Save transaction
+    await Transaction.create({
+      userId: user._id,
+      type: `Airtime (${network})`,
+      amount: Number(amount),
+      status: "successful",
+    });
+
+    res.json({
+      success: true,
+      message: "Airtime purchase successful",
+      walletBalance: user.walletBalance,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
 });
 
-// Crucial: Export the router so server.js can find your endpoints
 module.exports = router;
