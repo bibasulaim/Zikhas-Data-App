@@ -1,5 +1,5 @@
-require("dotenv").config();
 
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
@@ -18,12 +18,14 @@ const authRoutes = require("./routes/auth");
 const walletRoutes = require("./routes/wallet");
 const vtuRoutes = require("./routes/vtu");
 const transactionRoutes = require("./routes/transactions");
+const adminRoutes = require("./routes/admin");
 
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api/vtu", vtuRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Test Route
 app.get("/", (req, res) => {

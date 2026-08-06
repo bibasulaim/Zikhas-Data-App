@@ -11,7 +11,9 @@ import Wallet from "./pages/Wallet";
 import Transactions from "./pages/Transactions";
 import CableTV from "./pages/CableTV";
 import Electricity from "./pages/Electricity";
-
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminTransactions from "./pages/AdminTransactions";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
@@ -38,10 +40,24 @@ function App() {
 
         <Route path="/cable-tv" element={<CableTV />} />
 
+<Route
+  path="/admin/transactions"
+  element={
+    <AdminRoute>
+      <AdminTransactions />
+    </AdminRoute>
+  }
+/>
         <Route path="/electricity" element={<Electricity />} />
-
-      </Routes>
-
+<Route
+  path="/admin"
+  element={
+    <AdminRoute>
+      <AdminDashboard />
+    </AdminRoute>
+  }
+/>
+</Routes>
     </BrowserRouter>
   );
 }

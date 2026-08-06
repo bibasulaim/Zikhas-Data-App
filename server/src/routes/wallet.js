@@ -84,5 +84,63 @@ router.post("/deposit", async (req, res) => {
     });
   }
 });
+// ===============================
+// Debit Wallet (Admin)
+// ===============================
+router.post("/withdraw", async (req, res) => {
+  try {
+    const { userId, amount } = req.body;
+
+    if (!userId || !amount) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID and amount are required",
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.walletBalance < Number(amount)) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient wallet balance",
+      });
+    }
+
+    // Debit wallet
+    user.walletBalance -= Number(amount);
+    await user.save();
+
+    // Save transaction
+    await Transaction.create({
+      userId: user._id,
+      type: "Wallet Debit",
+      amount: Number(amount),
+      status: "successful",
+    });
+
+    res.json({
+      success: true,
+      message: "Wallet debited successfully",
+      walletBalance: user.walletBalance,
+    });
+
+  } catch (error) {
+    console.error("Wallet Debit Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+});
 
 module.exports = router;
